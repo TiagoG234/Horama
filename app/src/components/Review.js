@@ -8,6 +8,7 @@ const Review = () => {
   const [user, setUser] = useState("");
   const [review, setReview] = useState("");
   const [availableReviews, setAvailableReviews] = useState([]);
+  const [movieName, setMovieName] = useState("");
   const { id } = useParams();
   const alert = document.getElementById("reviewEmpty");
   const fetchData = () => {
@@ -15,6 +16,14 @@ const Review = () => {
       console.log(response.data);
       setAvailableReviews(response.data);
     });
+  };
+
+  const getName = () => {
+    fetch(`http://omdbapi.com/?apikey=470179fa&i=${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMovieName(data.Title);
+      });
   };
 
   const handleSubmit = (e) => {
@@ -41,6 +50,7 @@ const Review = () => {
 
   useEffect(() => {
     fetchData();
+    getName();
   }, []);
 
   const handleClick = (e) => {
@@ -68,6 +78,7 @@ const Review = () => {
       </div>
       <div className="d-flex">
         <div className="col-md-4 mx-5">
+          <h3>Submit your review here!</h3>
           <form
             className="form-inline"
             onSubmit={(e) => {
@@ -99,7 +110,7 @@ const Review = () => {
           </form>
         </div>
         <div className="text-center col-md-4 mx-5">
-          <h3>Reviews</h3>
+          <h3>{`Reviews for ${movieName}`}</h3>
           {availableReviews.map((data) => {
             return (
               <div
